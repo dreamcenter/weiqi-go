@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <style>
+      *{
+        padding: 0;
+        margin: 0;
+      }
+      .qp{
+        width: 500px;
+        height: 500px;
+        background-image: url('./qp.jpg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin: 100px auto 10px auto;
+      }
+      p{
+        text-align: center;
+      }
+    </style>
+    <script>
+      window.onload = function () {
+        var record = true
+        var step = 0
+        var qp = document.getElementsByClassName('qp')[0]
+        // qp.style.width = "500px"
+        document.oncontextmenu = function () {return false}
+        qp.onclick = function (ev) {
+          // console.log(ev)
+          if (ev.button == 0) {
+            var x = ev.clientX
+            var y = ev.clientY
+
+            let temp = document.createElement('div')
+
+            step++
+            temp.dataStep = step
+            temp.setAttribute('dataStep',step)
+
+            temp.innerText = step
+            temp.style.textAlign = 'center'
+            temp.style.lineHeight = '20px'
+            temp.style.fontSize = '12px'
+
+            temp.style.boxSizing = 'border-box'
+            temp.style.width = '20px'
+            temp.style.height = '20px'
+            temp.style.borderRadius = '10px'
+            temp.style
+            if (record) {
+              temp.style.backgroundColor = 'black'
+              temp.style.color = 'white'
+            } else {
+              temp.style.border = '2px solid black'
+              temp.style.backgroundColor = 'white'
+              temp.style.color = 'black'
+              temp.style.lineHeight = '16px'
+            }
+            temp.style.position = 'absolute'
+            temp.style.top = (y-10) + 'px'
+            temp.style.left = (x-10) + 'px'
+            temp.oncontextmenu = function (e) {
+              if (this.dataStep == step) {
+                qp.removeChild(document.querySelectorAll('div[dataStep="'+this.dataStep+'"]')[0])
+                record = !record
+                step--
+              }
+              return false
+            }
+            temp.onmousedown = function (e) {
+              if (e.button == 0) {
+                var target = document.querySelectorAll('div[dataStep="'+this.dataStep+'"]')[0]
+                var out = target.cloneNode(true)
+                out.style.position = 'relative'
+                out.style.top = '0'
+                out.style.left = '0'
+                out.style.display = 'inline-block'
+                out.style.border = '1px solid red'
+                if (target.style.color == 'white') {
+                  document.getElementById('black').appendChild(out)
+                } else {
+                  document.getElementById('white').appendChild(out)
+                }
+                qp.removeChild(target)
+              }
+            }
+            temp.onmouseover = function () {
+              this.style.cursor = 'default'
+            }
+            qp.appendChild(temp)
+            record = !record
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="qp" style="border:1px solid black">
+    </div>
+    <p><b>左键气位</b>下棋<b>左键棋位</b>吃棋<b>右键棋位</b>悔棋</p>
+    <p id="black">黑被吃</p>
+    <p id="white">白被吃</p>
+  </body>
+</html>
